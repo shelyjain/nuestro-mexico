@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuestro México</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Mulish:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
+
+  :root{
+    --red: #9C2B1B;
+    --red-deep: #7A2013;
+    --red-deeper: #611808;
+    --cream: #F5EAD0;
+    --cream-dim: rgba(245,234,208,0.72);
+    --cream-faint: rgba(245,234,208,0.16);
+    --ink: #3A130A;
+    --marigold: #E8A33D;
+    --teal: #2C8C86;
+    --pink: #D65B73;
+    --olive: #6B7B3B;
+    --shadow: rgba(0,0,0,0.35);
+  }
+
+  *{ box-sizing:border-box; }
+  ::selection{ background: var(--marigold); color: var(--ink); }
+
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background: var(--red);
+    color: var(--cream);
+    font-family:'Mulish', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{ margin:0; text-wrap:balance; font-family:'Anton', 'Mulish', sans-serif; font-weight:400; letter-spacing:0.01em; }
+
+  a{ color:inherit; }
+  button{ font-family:inherit; color:inherit; }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 clamp(20px,5vw,56px); }
+
+  /* ================= TOP NAV ================= */
+  .topnav{
+    position:fixed; top:0; left:0; right:0; z-index:80;
+    background: color-mix(in srgb, var(--red-deeper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--cream-faint);
+  }
+  .topnav-inner{
+    max-width:1080px; margin:0 auto; padding:14px clamp(20px,5vw,56px);
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:9px; font-family:'Anton'; font-size:1.05rem; letter-spacing:0.03em; }
+  .brand .sq{ width:11px; height:11px; background:var(--cream); flex:none; transform:rotate(6deg); }
+  .toplinks{ display:flex; gap:2px; flex-wrap:wrap; list-style:none; margin:0; padding:0; }
+  .toplinks button{
+    background:none; border:none; cursor:pointer;
+    padding:7px 12px; border-radius:999px;
+    font-size:0.78rem; font-weight:800; letter-spacing:0.04em; text-transform:uppercase;
+    color: var(--cream-dim);
+    transition: background .2s ease, color .2s ease;
+  }
+  .toplinks button:hover, .toplinks button:focus-visible{ background: var(--cream-faint); color:var(--cream); outline:none; }
+  .toplinks button.active{ background:var(--cream); color:var(--ink); }
+  .toplinks button:focus-visible{ box-shadow:0 0 0 2px var(--marigold); }
+
+  /* ================= PAGES ================= */
+  .stage{ padding-top: 62px; padding-bottom: 78px; min-height:100vh; }
+  .page{ display:none; padding: 56px 0 40px; }
+  .page.active{ display:block; }
+  @media (prefers-reduced-motion: no-preference){
+    .page.active{ animation: pagein .55s cubic-bezier(.2,.8,.2,1) both; }
+  }
+  @keyframes pagein{
+    from{ opacity:0; transform: translateY(26px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .eyebrow{ font-size:0.78rem; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:var(--marigold); }
+  .tiny-label{ font-size:0.72rem; font-weight:800; letter-spacing:0.22em; text-transform:uppercase; color:var(--cream-dim); }
+
+  .accent-sq{ display:inline-block; width:16px; height:16px; background:var(--cream); transform:rotate(6deg); flex:none; }
+
+  /* pattern strip (talavera motif) */
+  .pattern-strip{ height:34px; width:100%; opacity:0.55; }
+
+  /* ---------------- HOME ---------------- */
+  #page-home{ text-align:center; }
+  .home-top{ letter-spacing:0.28em; text-transform:uppercase; font-size:0.72rem; font-weight:800; color:var(--cream-dim); margin-bottom:26px; }
+  .home-eyebrow{ font-size:clamp(0.95rem,2.4vw,1.3rem); font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--cream); margin-bottom:6px; }
+  h1.title-mx{ font-size:clamp(4.2rem,17vw,10rem); line-height:0.85; color:var(--cream); }
+  .home-lede{ max-width:44ch; margin:22px auto 0; font-size:1.08rem; color:var(--cream-dim); }
+  .home-bottom{ margin-top:54px; font-size:0.72rem; font-weight:800; letter-spacing:0.24em; text-transform:uppercase; color:var(--cream-dim); }
+  .home-cta{
+    margin-top:30px; display:inline-flex; align-items:center; gap:10px;
+    border:1.5px solid var(--cream-faint); border-radius:999px; padding:10px 22px;
+    background:none; cursor:pointer; font-weight:800; font-size:0.85rem; letter-spacing:0.05em; text-transform:uppercase;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .home-cta:hover{ background:var(--cream); color:var(--ink); transform:translateY(-2px); }
+  .home-cta:focus-visible{ box-shadow:0 0 0 2px var(--marigold); outline:none; }
+
+  /* ---------------- SECTION HEAD (shared) ---------------- */
+  .sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:38px; }
+  .sec-head h2{ font-size:clamp(2.4rem,7vw,4rem); line-height:0.95; }
+  .sec-num{ font-family:'Anton'; font-size:0.85rem; color:var(--cream-dim); letter-spacing:0.1em; }
+
+  /* ---------------- INFO GENERAL ---------------- */
+  .info-row{ display:grid; grid-template-columns: 1.1fr 1fr; gap:40px; align-items:center; margin-bottom:64px; }
+  .info-row.reverse{ grid-template-columns: 1fr 1.1fr; }
+  .info-row.reverse .info-copy{ order:2; }
+  .info-row.reverse .info-art{ order:1; }
+  @media (max-width:760px){
+    .info-row, .info-row.reverse{ grid-template-columns:1fr; }
+    .info-row.reverse .info-copy, .info-row.reverse .info-art{ order:initial; }
+  }
+  .info-copy h3{ font-size:clamp(1.7rem,4.4vw,2.3rem); margin-bottom:14px; }
+  .info-copy p{ color:var(--cream-dim); font-size:0.98rem; }
+
+  .fact-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  @media (max-width:520px){ .fact-grid{ grid-template-columns:1fr; } }
+
+  .flip-card{
+    all:unset; cursor:pointer; display:block;
+    perspective:1000px; height:150px; border-radius:14px;
+  }
+  .flip-inner{
+    position:relative; width:100%; height:100%;
+    transition: transform .6s cubic-bezier(.2,.8,.2,1);
+    transform-style:preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{ transform: rotateY(180deg); }
+  .flip-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border:1.5px solid var(--cream-faint); border-radius:14px;
+    padding:16px 18px; display:flex; flex-direction:column; justify-content:center;
+    background: color-mix(in srgb, var(--red-deep) 55%, transparent);
+  }
+  .flip-face.back{ transform:rotateY(180deg); background:var(--cream); color:var(--ink); }
+  .flip-label{ font-size:0.68rem; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:var(--marigold); margin-bottom:8px; }
+  .flip-face.back .flip-label{ color:var(--red); }
+  .flip-value{ font-family:'Anton'; font-size:1.35rem; line-height:1.05; }
+  .flip-hint{ margin-top:auto; font-size:0.68rem; color:var(--cream-dim); font-weight:700; letter-spacing:0.06em; }
+  .flip-face.back .flip-hint{ display:none; }
+  .flip-face.back p{ font-size:0.86rem; margin:0; line-height:1.45; }
+
+  .art-box{ display:flex; align-items:center; justify-content:center; padding:14px; }
+  .art-box svg{ width:100%; max-width:260px; height:auto; }
+
+  .spotlight{
+    border:1.5px dashed var(--cream-faint); border-radius:18px;
+    padding:30px clamp(20px,4vw,40px); display:grid; grid-template-columns: auto 1fr; gap:22px; align-items:center;
+  }
+  @media (max-width:600px){ .spotlight{ grid-template-columns:1fr; text-align:center; } }
+  .spotlight svg{ width:96px; height:96px; }
+  .spotlight h3{ font-size:1.4rem; margin-bottom:8px; }
+  .spotlight p{ color:var(--cream-dim); margin:0; font-size:0.96rem; }
+
+  /* ---------------- ANTES DE PRESENTAR ---------------- */
+  .reflect{ display:grid; gap:18px; }
+  .reflect-card{ border:1.5px solid var(--cream-faint); border-radius:16px; padding:26px 28px; background: color-mix(in srgb, var(--red-deep) 45%, transparent); }
+  .reflect-q{ display:flex; align-items:center; gap:10px; font-family:'Anton'; font-size:1.15rem; margin-bottom:12px; color:var(--marigold); }
+  .reflect-a{ color:var(--cream-dim); margin:0; }
+  .reflect-a.placeholder{
+    border:1.5px dashed var(--cream-faint); border-radius:10px; padding:14px 16px;
+    font-style:italic; color:var(--cream-dim);
+  }
+  .pending-chip{
+    display:inline-flex; align-items:center; gap:7px; font-size:0.68rem; font-weight:800;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--ink); background:var(--marigold);
+    padding:5px 11px; border-radius:999px; margin-bottom:10px;
+  }
+
+  /* ---------------- LA BAMBA ---------------- */
+  #page-bamba{ text-align:center; }
+  .bamba-wave{ display:flex; gap:4px; justify-content:center; margin:26px auto 30px; max-width:340px; }
+  .bamba-wave span{ height:6px; flex:1; border-radius:3px; background:var(--teal); opacity:.4; }
+  @media (prefers-reduced-motion: no-preference){
+    .bamba-wave span{ animation: waveline 2.2s ease-in-out infinite; }
+  }
+  .bamba-wave span:nth-child(odd){ animation-delay:.3s; }
+  @keyframes waveline{ 0%,100%{ transform:scaleY(1); opacity:.4; } 50%{ transform:scaleY(2.6); opacity:.85; } }
+  .pending-block{
+    max-width:520px; margin:0 auto; border:2px dashed var(--cream-faint); border-radius:20px; padding:44px 30px;
+  }
+
+  /* ---------------- DIA DE LOS MUERTOS ---------------- */
+  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:8px 0 44px; }
+  @media (max-width:640px){ .stat-row{ grid-template-columns:1fr; } }
+  .stat-tile{ border:1.5px solid var(--cream-faint); border-radius:14px; padding:20px 16px; text-align:center; }
+  .stat-num{ font-family:'Anton'; font-size:1.9rem; color:var(--marigold); }
+  .stat-label{ font-size:0.78rem; color:var(--cream-dim); margin-top:4px; }
+
+  .muertos-layout{ display:grid; grid-template-columns:1.2fr 0.8fr; gap:44px; align-items:start; margin-bottom:44px; }
+  @media (max-width:800px){ .muertos-layout{ grid-template-columns:1fr; } }
+  .muertos-copy{ column-count:1; }
+  @media (min-width:640px){ .muertos-copy{ column-count:2; column-gap:32px; } }
+  .muertos-copy p{ font-size:0.98rem; color:var(--cream-dim); margin:0 0 16px; break-inside:avoid; }
+  .muertos-copy strong{ color:var(--cream); }
+  .muertos-art{ display:flex; justify-content:center; }
+  .muertos-art svg{ width:100%; max-width:220px; height:auto; }
+
+  .ofrenda-title{ font-family:'Anton'; font-size:1.5rem; margin-bottom:16px; }
+  .tag-grid{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+  .tag{
+    all:unset; cursor:pointer; padding:9px 16px; border-radius:999px; font-size:0.86rem; font-weight:700;
+    border:1.5px solid var(--cream-faint); transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .tag[aria-pressed="true"]{ background:var(--marigold); color:var(--ink); border-color:var(--marigold); }
+  .tag:hover{ border-color:var(--cream); }
+  .tag:focus-visible{ box-shadow:0 0 0 2px var(--marigold); outline:none; }
+  .detail-panel{
+    min-height:64px; border:1.5px dashed var(--cream-faint); border-radius:14px; padding:16px 18px;
+    color:var(--cream-dim); font-size:0.94rem; display:flex; align-items:center;
+  }
+  .detail-panel strong{ color:var(--marigold); margin-right:8px; }
+
+  /* ---------------- FUENTES / CLOSING ---------------- */
+  #page-fuentes{ text-align:center; }
+  .fuentes-list{ list-style:none; padding:0; margin:26px 0 0; display:grid; gap:10px; max-width:420px; margin-inline:auto; }
+  .fuentes-list a{ text-decoration:underline; text-underline-offset:3px; font-weight:700; }
+  .fuentes-list li{ color:var(--cream-dim); font-size:0.94rem; }
+
+  /* ================= BOTTOM NAV ================= */
+  .bottombar{
+    position:fixed; left:0; right:0; bottom:0; z-index:80;
+    background: color-mix(in srgb, var(--red-deeper) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-top:1px solid var(--cream-faint);
+    padding:10px clamp(16px,5vw,40px);
+    display:flex; align-items:center; justify-content:center; gap:18px;
+  }
+  .navbtn{
+    all:unset; cursor:pointer; width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border:1.5px solid var(--cream-faint); flex:none;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .navbtn:hover{ background:var(--cream-faint); }
+  .navbtn:active{ transform:scale(0.92); }
+  .navbtn:focus-visible{ box-shadow:0 0 0 2px var(--marigold); outline:none; }
+  .navbtn svg{ width:16px; height:16px; fill:var(--cream); }
+  .dots{ display:flex; gap:8px; }
+  .dot{ all:unset; cursor:pointer; width:9px; height:9px; border-radius:50%; border:1.5px solid var(--cream-dim); }
+  .dot.active{ background:var(--cream); border-color:var(--cream); }
+  .dot:focus-visible{ box-shadow:0 0 0 2px var(--marigold); outline:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    .bamba-wave span{ animation:none !important; }
+  }
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand"><span class="sq"></span>Nuestro México</div>
+    <ul class="toplinks" role="tablist">
+      <li><button data-goto="home" class="active">Inicio</button></li>
+      <li><button data-goto="info">Información General</button></li>
+      <li><button data-goto="antes">Antes de Presentar</button></li>
+      <li><button data-goto="bamba">La Bamba</button></li>
+      <li><button data-goto="muertos">Día de los Muertos</button></li>
+      <li><button data-goto="fuentes">Fuentes</button></li>
+    </ul>
+  </div>
+</nav>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <pattern id="talavera" width="46" height="46" patternUnits="userSpaceOnUse">
+      <g fill="var(--cream)">
+        <circle cx="23" cy="23" r="3"></circle>
+        <ellipse cx="23" cy="11" rx="3.4" ry="6"></ellipse>
+        <ellipse cx="23" cy="35" rx="3.4" ry="6"></ellipse>
+        <ellipse cx="11" cy="23" rx="6" ry="3.4"></ellipse>
+        <ellipse cx="35" cy="23" rx="6" ry="3.4"></ellipse>
+        <ellipse cx="14" cy="14" rx="3.2" ry="5.2" transform="rotate(45 14 14)"></ellipse>
+        <ellipse cx="32" cy="32" rx="3.2" ry="5.2" transform="rotate(45 32 32)"></ellipse>
+        <ellipse cx="32" cy="14" rx="3.2" ry="5.2" transform="rotate(-45 32 14)"></ellipse>
+        <ellipse cx="14" cy="32" rx="3.2" ry="5.2" transform="rotate(-45 14 32)"></ellipse>
+      </g>
+    </pattern>
+  </defs>
+</svg>
+
+<div class="stage">
+  <div class="wrap">
+    <svg class="pattern-strip" viewBox="0 0 460 34" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="460" height="34" fill="url(#talavera)"></rect>
+    </svg>
+  </div>
+
+  <!-- ============ HOME ============ -->
+  <section class="page active" id="page-home">
+    <div class="wrap">
+      <div class="home-top">[nombres del equipo]</div>
+      <div class="home-eyebrow">Explorando el espíritu de</div>
+      <h1 class="title-mx">MÉXICO</h1>
+      <p class="home-lede">Información general, lo que aprendimos en clase, y dos tradiciones que nos marcaron: La Bamba y el Día de los Muertos.</p>
+      <button class="home-cta" data-goto="info">Comenzar <span aria-hidden="true">→</span></button>
+      <div class="home-bottom">Proyecto de Español</div>
+    </div>
+  </section>
+
+  <!-- ============ INFO GENERAL ============ -->
+  <section class="page" id="page-info">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">01 — Lo básico</div>
+          <h2>Información<br>General</h2>
+        </div>
+        <div class="sec-num">Toca las tarjetas ↻</div>
+      </div>
+
+      <div class="info-row">
+        <div class="info-copy">
+          <h3>Datos generales</h3>
+          <p>Cuatro cosas que repasamos en clase sobre México. Toca cada tarjeta para voltearla.</p>
+          <div class="fact-grid">
+            <button class="flip-card" data-flip>
+              <div class="flip-inner">
+                <div class="flip-face front">
+                  <div class="flip-label">País</div>
+                  <div class="flip-value">México</div>
+                  <div class="flip-hint">toca para más ↻</div>
+                </div>
+                <div class="flip-face back">
+                  <div class="flip-label">Dato</div>
+                  <p>Nombre oficial: Estados Unidos Mexicanos, en América del Norte.</p>
+                </div>
+              </div>
+            </button>
+
+            <button class="flip-card" data-flip>
+              <div class="flip-inner">
+                <div class="flip-face front">
+                  <div class="flip-label">Gobierno</div>
+                  <div class="flip-value" style="font-size:1.05rem;">República democrática</div>
+                  <div class="flip-hint">toca para más ↻</div>
+                </div>
+                <div class="flip-face back">
+                  <div class="flip-label">Dato</div>
+                  <p>Está formada por 32 estados, incluida la Ciudad de México como capital.</p>
+                </div>
+              </div>
+            </button>
+
+            <button class="flip-card" data-flip>
+              <div class="flip-inner">
+                <div class="flip-face front">
+                  <div class="flip-label">Bandera</div>
+                  <div class="flip-value" style="font-size:1.1rem;">Verde, blanco y rojo</div>
+                  <div class="flip-hint">toca para más ↻</div>
+                </div>
+                <div class="flip-face back">
+                  <div class="flip-label">Dato</div>
+                  <p>Al centro hay un águila con algunas plantas y una serpiente.</p>
+                </div>
+              </div>
+            </button>
+
+            <button class="flip-card" data-flip>
+              <div class="flip-inner">
+                <div class="flip-face front">
+                  <div class="flip-label">Moneda</div>
+                  <div class="flip-value">El peso</div>
+                  <div class="flip-hint">toca para más ↻</div>
+                </div>
+                <div class="flip-face back">
+                  <div class="flip-label">Dato</div>
+                  <p>El peso mexicano es la moneda que se usa en todo el país.</p>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+        <div class="info-art art-box" aria-hidden="true">
+          <svg viewBox="0 0 220 160">
+            <g fill="var(--cream)">
+              <ellipse cx="110" cy="118" rx="98" ry="18"></ellipse>
+              <path d="M60 108 Q110 50 160 108 Q110 96 60 108 Z"></path>
+              <ellipse cx="110" cy="98" rx="26" ry="10"></ellipse>
+              <ellipse cx="40" cy="140" rx="9" ry="17" transform="rotate(20 40 140)"></ellipse>
+              <circle cx="40" cy="123" r="6"></circle>
+              <ellipse cx="180" cy="140" rx="9" ry="17" transform="rotate(-20 180 140)"></ellipse>
+              <circle cx="180" cy="123" r="6"></circle>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="spotlight">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <g fill="var(--cream)">
+            <rect x="20" y="55" width="60" height="35" rx="2"></rect>
+            <path d="M15 55 L50 25 L85 55 Z"></path>
+            <rect x="14" y="52" width="8" height="38" opacity="0.9"></rect>
+            <rect x="78" y="52" width="8" height="38" opacity="0.9"></rect>
+            <rect x="30" y="63" width="6" height="27"></rect>
+            <rect x="47" y="63" width="6" height="27"></rect>
+            <rect x="64" y="63" width="6" height="27"></rect>
+          </g>
+        </svg>
+        <div>
+          <h3>Dato curioso — la bandera</h3>
+          <p>Según la leyenda azteca, el pueblo mexica fundó Tenochtitlan en el lugar exacto donde vieron un águila devorando una serpiente sobre un nopal — la misma escena que hoy aparece al centro de la bandera.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ANTES DE PRESENTAR ============ -->
+  <section class="page" id="page-antes">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">02 — Reflexión</div>
+          <h2>Antes de<br>Presentar</h2>
+        </div>
+      </div>
+
+      <div class="reflect">
+        <div class="reflect-card">
+          <div class="pending-chip">Pendiente</div>
+          <div class="reflect-q"><span class="accent-sq"></span>Algo interesante que aprendimos fue:</div>
+          <div class="reflect-a placeholder">Espacio reservado — esta parte la completa tu compañero/a.</div>
+        </div>
+
+        <div class="reflect-card">
+          <div class="reflect-q"><span class="accent-sq"></span>Algo que nos sorprendió:</div>
+          <p class="reflect-a">Nos sorprendimos en cómo las personas de México son muy amistosos con todos. No les importa si eres una turista, quieren hablar contigo y conocerte. También solo te dicen lo que quieres escuchar, no te van a decir toda la verdad. No es algo malo, solo que te quieren caer bien.</p>
+        </div>
+
+        <div class="reflect-card">
+          <div class="reflect-q"><span class="accent-sq"></span>La cultura popular representa la identidad del país porque:</div>
+          <p class="reflect-a">La cultura de México contiene mucha vibrancia y personalidad. Refleja mucho el amor y la familia y como los mexicanos valoran la comunidad. Son muy bienvenidos a todos y tienen mucha orgullo ser mexicano. Siempre apoyan a los otros mexicanos y quieren verlos ganar en todo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LA BAMBA ============ -->
+  <section class="page" id="page-bamba">
+    <div class="wrap">
+      <div class="eyebrow">03 — Tradición cultural</div>
+      <h2 style="font-size:clamp(2.6rem,9vw,5rem); margin:8px 0 6px;">La Bamba</h2>
+      <div class="tiny-label">Veracruz, México</div>
+      <div class="bamba-wave" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="pending-block">
+        <div class="pending-chip">Pendiente</div>
+        <p style="color:var(--cream-dim); margin:0;">Este espacio lo completa tu compañero/a con el contenido sobre La Bamba.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DIA DE LOS MUERTOS ============ -->
+  <section class="page" id="page-muertos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow">04 — Tradición cultural</div>
+          <h2>Día de los<br>Muertos</h2>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-tile"><div class="stat-num">~3,000</div><div class="stat-label">años de raíces indígenas</div></div>
+        <div class="stat-tile"><div class="stat-num">1–2 nov</div><div class="stat-label">fechas de celebración</div></div>
+        <div class="stat-tile"><div class="stat-num">2008</div><div class="stat-label">reconocido por la UNESCO</div></div>
+      </div>
+
+      <div class="muertos-layout">
+        <div class="muertos-copy">
+          <p>El Día de los Muertos tiene raíces indígenas de hace unos <strong>3,000 años</strong>, cuando los aztecas y otros pueblos de Mesoamérica honraban a sus muertos como parte natural de la vida. Después de la conquista española, esta tradición se mezcló con el catolicismo: el <strong>1 de noviembre</strong> (Día de Todos los Santos) y el <strong>2 de noviembre</strong> (Día de los Fieles Difuntos).</p>
+          <p>Según la tradición, las puertas del cielo se abren a la medianoche del 31 de octubre, y los espíritus de los niños ("angelitos") pueden reunirse con su familia durante 24 horas. El 2 de noviembre les toca el turno a los espíritus de los adultos.</p>
+          <p>Las familias construyen <strong>ofrendas</strong> para recibir a sus seres queridos, con elementos que representan la tierra, el aire, el agua y el fuego.</p>
+          <p>Una de las imágenes más reconocidas de la celebración es <strong>La Catrina</strong>, creada por el artista José Guadalupe Posada a principios del siglo XX como una crítica a los mexicanos que preferían imitar las modas europeas antes que valorar su propia cultura.</p>
+        </div>
+        <div class="muertos-art" aria-hidden="true">
+          <svg viewBox="0 0 160 160">
+            <g fill="var(--cream)">
+              <ellipse cx="80" cy="70" rx="34" ry="30"></ellipse>
+              <ellipse cx="60" cy="72" rx="7" ry="10" fill="var(--red)"></ellipse>
+              <ellipse cx="100" cy="72" rx="7" ry="10" fill="var(--red)"></ellipse>
+              <path d="M80 78 L86 92 L74 92 Z" fill="var(--red)"></path>
+              <path d="M62 98 Q80 108 98 98" stroke="var(--red)" stroke-width="3" fill="none"></path>
+              <circle cx="80" cy="46" r="7" fill="var(--marigold)"></circle>
+              <ellipse cx="68" cy="50" rx="5" ry="9" fill="var(--marigold)" transform="rotate(-30 68 50)"></ellipse>
+              <ellipse cx="92" cy="50" rx="5" ry="9" fill="var(--marigold)" transform="rotate(30 92 50)"></ellipse>
+            </g>
+            <g fill="var(--marigold)" opacity="0.9">
+              <circle cx="30" cy="130" r="10"></circle>
+              <circle cx="50" cy="140" r="7"></circle>
+              <circle cx="120" cy="132" r="9"></circle>
+              <circle cx="136" cy="118" r="6"></circle>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="ofrenda-title">Elementos de una ofrenda</div>
+      <div class="tag-grid" id="tagGrid" role="group" aria-label="Elementos de la ofrenda">
+        <button class="tag" aria-pressed="false" data-detail="Velas: Guían el camino de las almas en su regreso a casa.">Velas</button>
+        <button class="tag" aria-pressed="false" data-detail="Cempasúchil: su color y aroma llevan a los espíritus hasta la ofrenda.">Cempasúchil</button>
+        <button class="tag" aria-pressed="false" data-detail="Copal: incienso sagrado que purifica el espacio para las almas.">Copal</button>
+        <button class="tag" aria-pressed="false" data-detail="Papel picado: representa el aire, uno de los cuatro elementos de la ofrenda.">Papel picado</button>
+        <button class="tag" aria-pressed="false" data-detail="Pan de muerto: pan dulce que se comparte con los seres queridos difuntos.">Pan de muerto</button>
+        <button class="tag" aria-pressed="false" data-detail="Calaveritas de azúcar: recuerdan que la muerte es parte natural de la vida.">Calaveritas de azúcar</button>
+        <button class="tag" aria-pressed="false" data-detail="Fotografías: ayudan a las almas a encontrar el camino a casa.">Fotografías</button>
+        <button class="tag" aria-pressed="false" data-detail="Comida favorita: se ofrece lo que más disfrutaba la persona en vida.">Comida favorita</button>
+      </div>
+      <div class="detail-panel" id="detailPanel">Toca un elemento para ver qué significa.</div>
+    </div>
+  </section>
+
+  <!-- ============ FUENTES ============ -->
+  <section class="page" id="page-fuentes">
+    <div class="wrap">
+      <h2 style="font-size:clamp(2.6rem,9vw,5rem);">Gracias</h2>
+      <p style="color:var(--cream-dim); max-width:44ch; margin:14px auto 0;">Proyecto de la clase de Español sobre México.</p>
+      <div class="tiny-label" style="margin-top:36px;">Fuentes — Día de los Muertos</div>
+      <ul class="fuentes-list">
+        <li><a href="https://www.history.com/articles/day-of-the-dead" target="_blank" rel="noopener">History.com — Day of the Dead</a></li>
+        <li><a href="https://www.britannica.com/topic/Day-of-the-Dead" target="_blank" rel="noopener">Britannica — Day of the Dead</a></li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="bottombar">
+  <button class="navbtn" id="prevBtn" aria-label="Página anterior">
+    <svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8V4z"></path></svg>
+  </button>
+  <div class="dots" id="dots"></div>
+  <button class="navbtn" id="nextBtn" aria-label="Página siguiente">
+    <svg viewBox="0 0 24 24"><path d="M9 4l8 8-8 8V4z"></path></svg>
+  </button>
+</div>
+
+<script>
+  var order = ['home','info','antes','bamba','muertos','fuentes'];
+  var current = 0;
+
+  var dotsEl = document.getElementById('dots');
+  order.forEach(function(id, i){
+    var d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Ir a la página ' + (i+1));
+    d.addEventListener('click', function(){ goTo(i); });
+    dotsEl.appendChild(d);
+  });
+  var dotEls = dotsEl.querySelectorAll('.dot');
+
+  function goTo(index){
+    current = (index + order.length) % order.length;
+    var id = order[current];
+    document.querySelectorAll('.page').forEach(function(p){
+      p.classList.toggle('active', p.id === 'page-' + id);
+    });
+    document.querySelectorAll('.toplinks button').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-goto') === id);
+    });
+    dotEls.forEach(function(d, i){ d.classList.toggle('active', i === current); });
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  document.querySelectorAll('[data-goto]').forEach(function(el){
+    el.addEventListener('click', function(){
+      goTo(order.indexOf(el.getAttribute('data-goto')));
+    });
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', function(){ goTo(current - 1); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ goTo(current + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight') goTo(current + 1);
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  // Flip cards
+  document.querySelectorAll('[data-flip]').forEach(function(card){
+    card.addEventListener('click', function(){ card.classList.toggle('flipped'); });
+  });
+
+  // Ofrenda tag details
+  var detailPanel = document.getElementById('detailPanel');
+  document.querySelectorAll('#tagGrid .tag').forEach(function(tag){
+    tag.addEventListener('click', function(){
+      document.querySelectorAll('#tagGrid .tag').forEach(function(t){ t.setAttribute('aria-pressed','false'); });
+      tag.setAttribute('aria-pressed','true');
+      var parts = tag.getAttribute('data-detail').split(':');
+      detailPanel.innerHTML = '<strong>' + parts[0] + '</strong>' + parts.slice(1).join(':');
+    });
+  });
+</script>
+
+</body>
+</html>
