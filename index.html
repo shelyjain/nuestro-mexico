@@ -93,7 +93,7 @@
   .home-top{ letter-spacing:0.28em; text-transform:uppercase; font-size:0.72rem; font-weight:800; color:var(--cream-dim); margin-bottom:26px; }
   .home-eyebrow{ font-size:clamp(0.95rem,2.4vw,1.3rem); font-weight:800; letter-spacing:0.12em; text-transform:uppercase; color:var(--cream); margin-bottom:6px; }
   h1.title-mx{ font-size:clamp(4.2rem,17vw,10rem); line-height:0.85; color:var(--cream); }
-  .home-lede{ max-width:44ch; margin:22px auto 0; font-size:1.08rem; color:var(--cream-dim); }
+  .home-lede{ max-width:46ch; margin:22px auto 0; font-size:1.08rem; color:var(--cream-dim); }
   .home-bottom{ margin-top:54px; font-size:0.72rem; font-weight:800; letter-spacing:0.24em; text-transform:uppercase; color:var(--cream-dim); }
   .home-cta{
     margin-top:30px; display:inline-flex; align-items:center; gap:10px;
@@ -146,7 +146,7 @@
   .flip-value{ font-family:'Anton'; font-size:1.35rem; line-height:1.05; }
   .flip-hint{ margin-top:auto; font-size:0.68rem; color:var(--cream-dim); font-weight:700; letter-spacing:0.06em; }
   .flip-face.back .flip-hint{ display:none; }
-  .flip-face.back p{ font-size:0.86rem; margin:0; line-height:1.45; }
+  .flip-face.back p{ font-size:0.86rem; margin:0; line-height:1.45; color:var(--ink); }
 
   .art-box{ display:flex; align-items:center; justify-content:center; padding:14px; }
   .art-box svg{ width:100%; max-width:260px; height:auto; }
@@ -175,37 +175,75 @@
     padding:5px 11px; border-radius:999px; margin-bottom:10px;
   }
 
-  /* ---------------- LA BAMBA ---------------- */
-  #page-bamba{ text-align:center; }
-  .bamba-wave{ display:flex; gap:4px; justify-content:center; margin:26px auto 30px; max-width:340px; }
-  .bamba-wave span{ height:6px; flex:1; border-radius:3px; background:var(--teal); opacity:.4; }
+  /* ---------------- EL VIAJE (interactive map) ---------------- */
+  .map-intro{ text-align:center; max-width:52ch; margin:0 auto 34px; color:var(--cream-dim); font-size:0.98rem; transition:opacity .4s ease; }
+  .map-shell{ position:relative; }
+  .map-shell.region-active .map-intro{ opacity:0; pointer-events:none; }
+
+  .map-back{
+    all:unset; display:none; align-items:center; gap:8px; cursor:pointer;
+    margin:0 auto 22px; width:fit-content; padding:9px 18px;
+    border:1.5px solid var(--cream-faint); border-radius:999px;
+    font-size:0.78rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase;
+    transition: background .2s ease;
+    position:relative; z-index:6;
+  }
+  .map-back:hover{ background:var(--cream-faint); }
+  .map-shell.region-active .map-back{ display:flex; }
+
+  .map-stage{
+    position:relative; max-width:460px; margin:0 auto;
+    aspect-ratio: 420 / 300;
+    transition: transform 1.1s cubic-bezier(.16,.84,.44,1);
+  }
+  .map-stage.zoomed{ transform: scale(2.5); }
+  .map-stage svg{ width:100%; height:100%; display:block; overflow:visible; }
+  .map-shell.region-active .map-stage{ z-index:1; pointer-events:none; }
+
+  .map-pin{
+    all:unset; cursor:pointer; position:absolute;
+    width:22px; height:22px; transform:translate(-50%,-50%);
+    display:flex; align-items:center; justify-content:center;
+    transition: opacity .5s ease;
+  }
+  .map-pin .dot{ width:12px; height:12px; border-radius:50%; background:var(--marigold); border:2px solid var(--cream); position:relative; z-index:2; }
+  .map-pin .pulse{ position:absolute; inset:0; border-radius:50%; border:2px solid var(--marigold); }
   @media (prefers-reduced-motion: no-preference){
-    .bamba-wave span{ animation: waveline 2.2s ease-in-out infinite; }
+    .map-pin .pulse{ animation: pinpulse 2.2s ease-out infinite; }
   }
-  .bamba-wave span:nth-child(odd){ animation-delay:.3s; }
-  @keyframes waveline{ 0%,100%{ transform:scaleY(1); opacity:.4; } 50%{ transform:scaleY(2.6); opacity:.85; } }
-  .pending-block{
-    max-width:520px; margin:0 auto; border:2px dashed var(--cream-faint); border-radius:20px; padding:44px 30px;
+  @keyframes pinpulse{ 0%{ transform:scale(0.6); opacity:0.9; } 100%{ transform:scale(2.4); opacity:0; } }
+  .map-pin[data-region="veracruz"] .dot{ background:var(--teal); }
+  .map-pin[data-region="veracruz"] .pulse{ border-color:var(--teal); }
+  .map-pin:focus-visible .dot{ box-shadow:0 0 0 3px var(--cream); }
+
+  .map-pin-label{
+    position:absolute; transform:translate(-50%, 4px);
+    font-size:0.66rem; font-weight:800; letter-spacing:0.05em; text-transform:uppercase;
+    white-space:nowrap; pointer-events:none; transition:opacity .5s ease;
+    background: color-mix(in srgb, var(--red-deeper) 80%, transparent);
+    padding:3px 8px; border-radius:999px;
   }
+  .map-shell.region-active .map-pin:not(.selected),
+  .map-shell.region-active .map-pin-label:not(.selected){ opacity:0; pointer-events:none; }
 
-  /* ---------------- DIA DE LOS MUERTOS ---------------- */
-  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:8px 0 44px; }
-  @media (max-width:640px){ .stat-row{ grid-template-columns:1fr; } }
-  .stat-tile{ border:1.5px solid var(--cream-faint); border-radius:14px; padding:20px 16px; text-align:center; }
-  .stat-num{ font-family:'Anton'; font-size:1.9rem; color:var(--marigold); }
-  .stat-label{ font-size:0.78rem; color:var(--cream-dim); margin-top:4px; }
+  .region-panel{ display:none; max-width:660px; margin:38px auto 0; }
+  .region-panel.active{ display:block; }
+  @media (prefers-reduced-motion: no-preference){
+    .region-panel.active{ animation: pagein .6s ease both; }
+  }
+  .region-head{ text-align:center; margin-bottom:8px; }
+  .region-head .tiny-label{ color:var(--marigold); }
+  .region-panel[data-region="veracruz"] .region-head .tiny-label{ color:var(--teal); }
+  .region-head h3{ font-size:clamp(2rem,6vw,3rem); margin:4px 0 4px; }
+  .region-sub{ text-align:center; color:var(--cream-dim); max-width:50ch; margin:0 auto 30px; }
 
-  .muertos-layout{ display:grid; grid-template-columns:1.2fr 0.8fr; gap:44px; align-items:start; margin-bottom:44px; }
-  @media (max-width:800px){ .muertos-layout{ grid-template-columns:1fr; } }
-  .muertos-copy{ column-count:1; }
-  @media (min-width:640px){ .muertos-copy{ column-count:2; column-gap:32px; } }
-  .muertos-copy p{ font-size:0.98rem; color:var(--cream-dim); margin:0 0 16px; break-inside:avoid; }
-  .muertos-copy strong{ color:var(--cream); }
-  .muertos-art{ display:flex; justify-content:center; }
-  .muertos-art svg{ width:100%; max-width:220px; height:auto; }
+  .mini-stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:30px; }
+  @media (max-width:560px){ .mini-stat-row{ grid-template-columns:1fr; } }
+  .mini-stat{ border:1.5px solid var(--cream-faint); border-radius:14px; padding:16px 12px; text-align:center; }
+  .mini-stat-num{ font-family:'Anton'; font-size:1.5rem; color:var(--marigold); }
+  .mini-stat-label{ font-size:0.74rem; color:var(--cream-dim); margin-top:2px; }
 
-  .ofrenda-title{ font-family:'Anton'; font-size:1.5rem; margin-bottom:16px; }
-  .tag-grid{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px; }
+  .tag-grid{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; justify-content:center; }
   .tag{
     all:unset; cursor:pointer; padding:9px 16px; border-radius:999px; font-size:0.86rem; font-weight:700;
     border:1.5px solid var(--cream-faint); transition: background .2s ease, color .2s ease, border-color .2s ease;
@@ -214,14 +252,43 @@
   .tag:hover{ border-color:var(--cream); }
   .tag:focus-visible{ box-shadow:0 0 0 2px var(--marigold); outline:none; }
   .detail-panel{
-    min-height:64px; border:1.5px dashed var(--cream-faint); border-radius:14px; padding:16px 18px;
-    color:var(--cream-dim); font-size:0.94rem; display:flex; align-items:center;
+    min-height:60px; border:1.5px dashed var(--cream-faint); border-radius:14px; padding:16px 18px;
+    color:var(--cream-dim); font-size:0.93rem; display:flex; align-items:center; margin-bottom:34px;
   }
   .detail-panel strong{ color:var(--marigold); margin-right:8px; }
 
+  .song-spotlight{
+    border:1.5px dashed var(--cream-faint); border-radius:18px; padding:26px 26px 28px; margin-bottom:32px;
+  }
+  .song-spotlight .tiny-label{ color:var(--marigold); margin-bottom:6px; }
+  .song-spotlight h4{ font-family:'Anton'; font-size:1.5rem; margin-bottom:10px; }
+  .song-spotlight p{ color:var(--cream-dim); margin:0 0 10px; font-size:0.95rem; }
+  .song-spotlight p:last-child{ margin-bottom:0; }
+
+  .film-title{ font-family:'Anton'; font-size:1.1rem; margin:0 0 12px; text-align:center; }
+
+  .pending-block{
+    max-width:520px; margin:0 auto; border:2px dashed var(--cream-faint); border-radius:20px; padding:38px 30px; text-align:center;
+  }
+  .video-slot{
+    max-width:420px; margin:22px auto 0; aspect-ratio:16/9; border:1.5px dashed var(--cream-faint); border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:var(--cream-dim);
+  }
+  .video-slot svg{ width:34px; height:34px; opacity:.7; }
+  .video-slot span{ font-size:0.78rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }
+
+  .video-embed{
+    position:relative; width:100%; max-width:560px; aspect-ratio:16/9; margin:0 auto 26px;
+    border-radius:14px; overflow:hidden; border:1.5px solid var(--cream-faint);
+    box-shadow:0 10px 30px var(--shadow);
+  }
+  .video-embed iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .pending-note{ max-width:440px; margin:0 auto; text-align:center; }
+  .pending-note p{ color:var(--cream-dim); margin:0; }
+
   /* ---------------- FUENTES / CLOSING ---------------- */
   #page-fuentes{ text-align:center; }
-  .fuentes-list{ list-style:none; padding:0; margin:26px 0 0; display:grid; gap:10px; max-width:420px; margin-inline:auto; }
+  .fuentes-list{ list-style:none; padding:0; margin:26px 0 0; display:grid; gap:10px; max-width:460px; margin-inline:auto; }
   .fuentes-list a{ text-decoration:underline; text-underline-offset:3px; font-weight:700; }
   .fuentes-list li{ color:var(--cream-dim); font-size:0.94rem; }
 
@@ -250,7 +317,7 @@
   .dot:focus-visible{ box-shadow:0 0 0 2px var(--marigold); outline:none; }
 
   @media (prefers-reduced-motion: reduce){
-    .bamba-wave span{ animation:none !important; }
+    .map-stage{ transition:none; }
   }
 </style>
 </head>
@@ -262,8 +329,7 @@
       <li><button data-goto="home" class="active">Inicio</button></li>
       <li><button data-goto="info">Información General</button></li>
       <li><button data-goto="antes">Antes de Presentar</button></li>
-      <li><button data-goto="bamba">La Bamba</button></li>
-      <li><button data-goto="muertos">Día de los Muertos</button></li>
+      <li><button data-goto="viaje">El Viaje</button></li>
       <li><button data-goto="fuentes">Fuentes</button></li>
     </ul>
   </div>
@@ -300,7 +366,7 @@
       <div class="home-top">[nombres del equipo]</div>
       <div class="home-eyebrow">Explorando el espíritu de</div>
       <h1 class="title-mx">MÉXICO</h1>
-      <p class="home-lede">Información general, lo que aprendimos en clase, y dos tradiciones que nos marcaron: La Bamba y el Día de los Muertos.</p>
+      <p class="home-lede">Información general, lo que aprendimos en clase, y un viaje musical y de danza a través de México: Juan Gabriel y La Bamba.</p>
       <button class="home-cta" data-goto="info">Comenzar <span aria-hidden="true">→</span></button>
       <div class="home-bottom">Proyecto de Español</div>
     </div>
@@ -331,7 +397,7 @@
                 </div>
                 <div class="flip-face back">
                   <div class="flip-label">Dato</div>
-                  <p>Nombre oficial: Estados Unidos Mexicanos, en América del Norte.</p>
+                  <p>Nombre oficial: Estados Unidos Mexicanos. Tiene más de 133 millones de habitantes — es el país con más hispanohablantes del mundo.</p>
                 </div>
               </div>
             </button>
@@ -345,7 +411,7 @@
                 </div>
                 <div class="flip-face back">
                   <div class="flip-label">Dato</div>
-                  <p>Está formada por 32 estados, incluida la Ciudad de México como capital.</p>
+                  <p>Está formada por 32 estados, incluida la Ciudad de México como capital. El presidente se elige cada 6 años (un "sexenio") y no puede reelegirse.</p>
                 </div>
               </div>
             </button>
@@ -359,7 +425,7 @@
                 </div>
                 <div class="flip-face back">
                   <div class="flip-label">Dato</div>
-                  <p>Al centro hay un águila con algunas plantas y una serpiente.</p>
+                  <p>Al centro hay un águila con algunas plantas y una serpiente. Tradicionalmente, el verde representa la esperanza, el blanco la unidad, y el rojo la sangre de los héroes nacionales.</p>
                 </div>
               </div>
             </button>
@@ -373,7 +439,7 @@
                 </div>
                 <div class="flip-face back">
                   <div class="flip-label">Dato</div>
-                  <p>El peso mexicano es la moneda que se usa en todo el país.</p>
+                  <p>El peso mexicano es la moneda que se usa en todo el país. Se divide en 100 centavos y usa el mismo símbolo que el dólar: "$".</p>
                 </div>
               </div>
             </button>
@@ -426,9 +492,8 @@
 
       <div class="reflect">
         <div class="reflect-card">
-          <div class="pending-chip">Pendiente</div>
           <div class="reflect-q"><span class="accent-sq"></span>Algo interesante que aprendimos fue:</div>
-          <div class="reflect-a placeholder">Espacio reservado — esta parte la completa tu compañero/a.</div>
+          <p class="reflect-a">Un baile tradicional de Veracruz llamado "La Bamba". En cierto momento del baile, las parejas amarran un moño con los pies, sin usar las manos — un baile con mucha precisión y una de las tradiciones que más nos llamó la atención de México.</p>
         </div>
 
         <div class="reflect-card">
@@ -444,85 +509,103 @@
     </div>
   </section>
 
-  <!-- ============ LA BAMBA ============ -->
-  <section class="page" id="page-bamba">
-    <div class="wrap">
-      <div class="eyebrow">03 — Tradición cultural</div>
-      <h2 style="font-size:clamp(2.6rem,9vw,5rem); margin:8px 0 6px;">La Bamba</h2>
-      <div class="tiny-label">Veracruz, México</div>
-      <div class="bamba-wave" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div style="position:relative; width:100%; max-width:720px; aspect-ratio:16/9; margin:0 auto; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,.35);">
-        <iframe
-          src="https://www.youtube.com/embed/zgfZwe-oURI?start=23"
-          title="La Bamba"
-          style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          loading="lazy">
-        </iframe>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ DIA DE LOS MUERTOS ============ -->
-  <section class="page" id="page-muertos">
+  <!-- ============ EL VIAJE (mapa interactivo) ============ -->
+  <section class="page" id="page-viaje">
     <div class="wrap">
       <div class="sec-head">
         <div>
-          <div class="eyebrow">04 — Tradición cultural</div>
-          <h2>Día de los<br>Muertos</h2>
+          <div class="eyebrow">03 — Música y danza</div>
+          <h2>El Viaje</h2>
         </div>
+        <div class="sec-num">Toca un punto del mapa</div>
       </div>
 
-      <div class="stat-row">
-        <div class="stat-tile"><div class="stat-num">~3,000</div><div class="stat-label">años de raíces indígenas</div></div>
-        <div class="stat-tile"><div class="stat-num">1–2 nov</div><div class="stat-label">fechas de celebración</div></div>
-        <div class="stat-tile"><div class="stat-num">2008</div><div class="stat-label">reconocido por la UNESCO</div></div>
-      </div>
+      <div class="map-shell" id="mapShell">
+        <p class="map-intro">Dos estados, dos tradiciones. Toca un punto del mapa para viajar hasta ahí y descubrir la música o la danza que aprendimos de esa región.</p>
 
-      <div class="muertos-layout">
-        <div class="muertos-copy">
-          <p>El Día de los Muertos tiene raíces indígenas de hace unos <strong>3,000 años</strong>, cuando los aztecas y otros pueblos de Mesoamérica honraban a sus muertos como parte natural de la vida. Después de la conquista española, esta tradición se mezcló con el catolicismo: el <strong>1 de noviembre</strong> (Día de Todos los Santos) y el <strong>2 de noviembre</strong> (Día de los Fieles Difuntos).</p>
-          <p>Según la tradición, las puertas del cielo se abren a la medianoche del 31 de octubre, y los espíritus de los niños ("angelitos") pueden reunirse con su familia durante 24 horas. El 2 de noviembre les toca el turno a los espíritus de los adultos.</p>
-          <p>Las familias construyen <strong>ofrendas</strong> para recibir a sus seres queridos, con elementos que representan la tierra, el aire, el agua y el fuego.</p>
-          <p>Una de las imágenes más reconocidas de la celebración es <strong>La Catrina</strong>, creada por el artista José Guadalupe Posada a principios del siglo XX como una crítica a los mexicanos que preferían imitar las modas europeas antes que valorar su propia cultura.</p>
-        </div>
-        <div class="muertos-art" aria-hidden="true">
-          <svg viewBox="0 0 160 160">
-            <g fill="var(--cream)">
-              <ellipse cx="80" cy="70" rx="34" ry="30"></ellipse>
-              <ellipse cx="60" cy="72" rx="7" ry="10" fill="var(--red)"></ellipse>
-              <ellipse cx="100" cy="72" rx="7" ry="10" fill="var(--red)"></ellipse>
-              <path d="M80 78 L86 92 L74 92 Z" fill="var(--red)"></path>
-              <path d="M62 98 Q80 108 98 98" stroke="var(--red)" stroke-width="3" fill="none"></path>
-              <circle cx="80" cy="46" r="7" fill="var(--marigold)"></circle>
-              <ellipse cx="68" cy="50" rx="5" ry="9" fill="var(--marigold)" transform="rotate(-30 68 50)"></ellipse>
-              <ellipse cx="92" cy="50" rx="5" ry="9" fill="var(--marigold)" transform="rotate(30 92 50)"></ellipse>
-            </g>
-            <g fill="var(--marigold)" opacity="0.9">
-              <circle cx="30" cy="130" r="10"></circle>
-              <circle cx="50" cy="140" r="7"></circle>
-              <circle cx="120" cy="132" r="9"></circle>
-              <circle cx="136" cy="118" r="6"></circle>
-            </g>
+        <button class="map-back" id="mapBackBtn" type="button">
+          <span aria-hidden="true">←</span> Volver al mapa
+        </button>
+
+        <div class="map-stage" id="mapStage">
+          <svg viewBox="0 0 420 300" aria-hidden="true">
+            <path d="M60,25 L95,20 L150,15 L200,25 L235,45 L232,70 L240,95 L235,120 L245,140 L238,160 L245,178 L232,192 L255,196 L290,190 L320,175 L345,160 L350,180 L330,205 L300,215 L270,222 L235,222 L205,215 L175,205 L150,190 L125,170 L105,150 L90,130 L75,110 L65,90 L75,75 L95,65 Z M50,30 L35,50 L30,80 L35,110 L45,140 L55,165 L60,172 L68,160 L62,130 L58,100 L60,70 L58,45 Z" fill="var(--cream)" opacity="0.92"></path>
+            <line x1="150" y1="60" x2="240" y2="130" stroke="var(--marigold)" stroke-width="2" stroke-dasharray="6 7" opacity="0.55"></line>
           </svg>
+
+          <button class="map-pin" type="button" data-region="chihuahua" style="left:35.7%; top:20%;" aria-label="Chihuahua — Música: Juan Gabriel">
+            <span class="pulse" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
+          </button>
+          <div class="map-pin-label" data-region="chihuahua" style="left:35.7%; top:11%;">Chihuahua · Música</div>
+
+          <button class="map-pin" type="button" data-region="veracruz" style="left:57.1%; top:43.3%;" aria-label="Veracruz — Danza: La Bamba">
+            <span class="pulse" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span>
+          </button>
+          <div class="map-pin-label" data-region="veracruz" style="left:57.1%; top:52%;">Veracruz · Danza</div>
+        </div>
+
+        <!-- Panel: Juan Gabriel -->
+        <div class="region-panel" data-region="chihuahua">
+          <div class="region-head">
+            <div class="tiny-label">Chihuahua — Música</div>
+            <h3>Juan Gabriel</h3>
+          </div>
+          <p class="region-sub">Compositor, cantante y actor. Su música llevó la vibrancia y la fiesta mexicana a todo el mundo. Toca cada año de la línea de tiempo para conocer su historia.</p>
+
+          <div class="mini-stat-row">
+            <div class="mini-stat"><div class="mini-stat-num">1,800</div><div class="mini-stat-label">canciones compuestas</div></div>
+            <div class="mini-stat"><div class="mini-stat-num">34</div><div class="mini-stat-label">álbumes propios</div></div>
+            <div class="mini-stat"><div class="mini-stat-num">100+</div><div class="mini-stat-label">álbumes producidos, 50+ artistas</div></div>
+          </div>
+
+          <div class="tag-grid" id="timelineGrid">
+            <button class="tag" aria-pressed="false" data-detail="1950: Nace como Alberto Aguilera Valadez el 7 de enero de 1950 en Parácuaro, Michoacán.">1950 · Nace</button>
+            <button class="tag" aria-pressed="false" data-detail="Escuela de Mejoramiento Social: A los cinco años entra a esta escuela/orfanato en Ciudad Juárez. Vivió ahí unos 8 años porque su mamá, empleada doméstica, no lo podía cuidar, y su papá no estaba presente por problemas de salud mental.">Escuela en Cd. Juárez</button>
+            <button class="tag" aria-pressed="false" data-detail="Su nombre: Crea el nombre artístico Juan Gabriel — Juan por su maestro de música, Gabriel por su papá.">Su nombre</button>
+            <button class="tag" aria-pressed="false" data-detail="1971: Lanza su primer álbum, El alma joven.">1971 · Primer álbum</button>
+            <button class="tag" aria-pressed="false" data-detail="Cine: Actúa en películas como En esta primavera, Nobleza ranchera, El Noa Noa, Es mi vida y Del otro lado del puente.">Cine</button>
+            <button class="tag" aria-pressed="false" data-detail="Legado: Funda una escuela de música y un orfanato para ayudar a niños desafortunados — devolviendo lo que la música le dio a él.">Legado</button>
+            <button class="tag" aria-pressed="false" data-detail="2016: Muere el 28 de agosto de 2016 en Santa Mónica, California, a los 66 años, dejando 1,800 canciones compuestas, 34 álbumes propios y más de 100 álbumes producidos para más de 50 artistas.">2016 · Fallece</button>
+          </div>
+          <div class="detail-panel" id="timelineDetail">Toca un punto de la línea de tiempo para ver más.</div>
+
+          <div class="song-spotlight">
+            <div class="tiny-label">Canción destacada</div>
+            <h4>El Noa Noa</h4>
+            <p>Esta canción muestra la vibrancia de la comunidad: celebra la vida social y es, literalmente, el alma de la fiesta.</p>
+            <p>Lleva el nombre de un bar real en Ciudad Juárez, el Noa Noa, donde Juan Gabriel se presentó al inicio de su carrera — por eso Chihuahua es el punto que elegimos en el mapa.</p>
+          </div>
+
+          <div class="film-title">Filmografía</div>
+          <div class="tag-grid" style="cursor:default;">
+            <span class="tag" style="cursor:default;">En esta primavera</span>
+            <span class="tag" style="cursor:default;">Nobleza ranchera</span>
+            <span class="tag" style="cursor:default;">El Noa Noa</span>
+            <span class="tag" style="cursor:default;">Es mi vida</span>
+            <span class="tag" style="cursor:default;">Del otro lado del puente</span>
+          </div>
+        </div>
+
+        <!-- Panel: La Bamba -->
+        <div class="region-panel" data-region="veracruz">
+          <div class="region-head">
+            <div class="tiny-label">Veracruz — Danza</div>
+            <h3>La Bamba</h3>
+          </div>
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/zgfZwe-oURI?start=23"
+              title="La Bamba"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"></iframe>
+          </div>
+          <div class="pending-note">
+            <div class="pending-chip">Pendiente</div>
+            <p>El resto del contenido sobre La Bamba lo completa tu compañero/a.</p>
+          </div>
         </div>
       </div>
-
-      <div class="ofrenda-title">Elementos de una ofrenda</div>
-      <div class="tag-grid" id="tagGrid" role="group" aria-label="Elementos de la ofrenda">
-        <button class="tag" aria-pressed="false" data-detail="Velas: Guían el camino de las almas en su regreso a casa.">Velas</button>
-        <button class="tag" aria-pressed="false" data-detail="Cempasúchil: su color y aroma llevan a los espíritus hasta la ofrenda.">Cempasúchil</button>
-        <button class="tag" aria-pressed="false" data-detail="Copal: incienso sagrado que purifica el espacio para las almas.">Copal</button>
-        <button class="tag" aria-pressed="false" data-detail="Papel picado: representa el aire, uno de los cuatro elementos de la ofrenda.">Papel picado</button>
-        <button class="tag" aria-pressed="false" data-detail="Pan de muerto: pan dulce que se comparte con los seres queridos difuntos.">Pan de muerto</button>
-        <button class="tag" aria-pressed="false" data-detail="Calaveritas de azúcar: recuerdan que la muerte es parte natural de la vida.">Calaveritas de azúcar</button>
-        <button class="tag" aria-pressed="false" data-detail="Fotografías: ayudan a las almas a encontrar el camino a casa.">Fotografías</button>
-        <button class="tag" aria-pressed="false" data-detail="Comida favorita: se ofrece lo que más disfrutaba la persona en vida.">Comida favorita</button>
-      </div>
-      <div class="detail-panel" id="detailPanel">Toca un elemento para ver qué significa.</div>
     </div>
   </section>
 
@@ -531,10 +614,10 @@
     <div class="wrap">
       <h2 style="font-size:clamp(2.6rem,9vw,5rem);">Gracias</h2>
       <p style="color:var(--cream-dim); max-width:44ch; margin:14px auto 0;">Proyecto de la clase de Español sobre México.</p>
-      <div class="tiny-label" style="margin-top:36px;">Fuentes — Día de los Muertos</div>
+      <div class="tiny-label" style="margin-top:36px;">Fuentes — Juan Gabriel / El Noa Noa</div>
       <ul class="fuentes-list">
-        <li><a href="https://www.history.com/articles/day-of-the-dead" target="_blank" rel="noopener">History.com — Day of the Dead</a></li>
-        <li><a href="https://www.britannica.com/topic/Day-of-the-Dead" target="_blank" rel="noopener">Britannica — Day of the Dead</a></li>
+        <li><a href="https://www.infobae.com/mexico/2024/04/09/el-noa-noa-asi-era-el-bar-que-inspiro-a-juan-gabriel-a-escribir-una-de-sus-mas-emblematicas-canciones/" target="_blank" rel="noopener">Infobae — El Noa Noa, el bar que inspiró la canción</a></li>
+        <li><a href="https://www.mexicodesconocido.com.mx/noa-noa-juan-gabriel.html" target="_blank" rel="noopener">México Desconocido — Noa Noa, bar donde debutó Juan Gabriel</a></li>
       </ul>
     </div>
   </section>
@@ -551,7 +634,7 @@
 </div>
 
 <script>
-  var order = ['home','info','antes','bamba','muertos','fuentes'];
+  var order = ['home','info','antes','viaje','fuentes'];
   var current = 0;
 
   var dotsEl = document.getElementById('dots');
@@ -596,16 +679,52 @@
     card.addEventListener('click', function(){ card.classList.toggle('flipped'); });
   });
 
-  // Ofrenda tag details
-  var detailPanel = document.getElementById('detailPanel');
-  document.querySelectorAll('#tagGrid .tag').forEach(function(tag){
-    tag.addEventListener('click', function(){
-      document.querySelectorAll('#tagGrid .tag').forEach(function(t){ t.setAttribute('aria-pressed','false'); });
-      tag.setAttribute('aria-pressed','true');
-      var parts = tag.getAttribute('data-detail').split(':');
-      detailPanel.innerHTML = '<strong>' + parts[0] + '</strong>' + parts.slice(1).join(':');
+  // Generic "tap a chip, see detail" wiring
+  function wireDetailGroup(groupEl, panelEl){
+    if (!groupEl || !panelEl) return;
+    groupEl.querySelectorAll('.tag').forEach(function(tag){
+      tag.addEventListener('click', function(){
+        groupEl.querySelectorAll('.tag').forEach(function(t){ t.setAttribute('aria-pressed','false'); });
+        tag.setAttribute('aria-pressed','true');
+        var raw = tag.getAttribute('data-detail');
+        var idx = raw.indexOf(':');
+        panelEl.innerHTML = '<strong>' + raw.slice(0, idx) + '</strong>' + raw.slice(idx + 1);
+      });
     });
+  }
+  wireDetailGroup(document.getElementById('timelineGrid'), document.getElementById('timelineDetail'));
+
+  // Interactive map: click a pin, zoom in, reveal that region's panel
+  var mapShell = document.getElementById('mapShell');
+  var mapStage = document.getElementById('mapStage');
+  var regionCoords = {
+    chihuahua: { x: 35.7, y: 20 },
+    veracruz:  { x: 57.1, y: 43.3 }
+  };
+
+  function selectRegion(region){
+    var c = regionCoords[region];
+    if (!c) return;
+    mapStage.style.transformOrigin = c.x + '% ' + c.y + '%';
+    mapShell.classList.add('region-active');
+    mapStage.classList.add('zoomed');
+    document.querySelectorAll('.map-pin, .map-pin-label').forEach(function(el){
+      el.classList.toggle('selected', el.getAttribute('data-region') === region);
+    });
+    document.querySelectorAll('.region-panel').forEach(function(p){
+      p.classList.toggle('active', p.getAttribute('data-region') === region);
+    });
+  }
+  function resetMap(){
+    mapShell.classList.remove('region-active');
+    mapStage.classList.remove('zoomed');
+    document.querySelectorAll('.region-panel').forEach(function(p){ p.classList.remove('active'); });
+  }
+  document.querySelectorAll('.map-pin').forEach(function(pin){
+    pin.addEventListener('click', function(){ selectRegion(pin.getAttribute('data-region')); });
   });
+  var mapBackBtn = document.getElementById('mapBackBtn');
+  if (mapBackBtn) mapBackBtn.addEventListener('click', resetMap);
 </script>
 
 </body>
